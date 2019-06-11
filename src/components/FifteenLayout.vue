@@ -337,6 +337,7 @@ export default {
             const data = event.dataTransfer.getData('text');
             const item = document.getElementById(data);
             item.style.left = `${n * 75 + 1}px`;
+            document.getElementById(data).style['pointer-events'] = 'unset';
         },
         onDragOver(n, event) {
             console.log('onDragOver');
@@ -352,12 +353,19 @@ export default {
         },
         onDragStart(item, event) {
             console.log('onDragStart');
-            event.target.classList.add('lowerZindex');
-            event.dataTransfer.setData('text', event.target.id);
 
-            event.target.setAttribute('style', 'pointer-events: none');
-            // document.getElementById(event.target.id).setAttribute('style', 'pointer-events: none');
-            // console.log('after', document.getElementById(event.target.id));
+            event.dataTransfer.setData('text', event.target.id);
+            let crt = event.srcElement.cloneNode(true);
+            crt.style.left = "unset";
+            crt.style.right = "unset";
+            crt.style.top = "unset";
+            crt.id = "something";
+            document.body.appendChild(crt);
+            event.dataTransfer.setDragImage(crt, 0, 0);
+
+            setTimeout(function(){
+                document.getElementById(event.target.id).style['pointer-events'] = 'none';
+            },0)
         },
         onMouseDown(entry, event) {
             console.log('onMouseDown');
